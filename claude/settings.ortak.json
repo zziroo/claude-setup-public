@@ -1,0 +1,89 @@
+{
+  "_aciklama": "kur.mjs bu anahtarları ~/.claude/settings.json dosyasına yazar: değeri buradakiyle değiştirilir, şablonda olmayan anahtarlara (permissions, model, kişisel tercihler) dokunulmaz. Kişisel tercihler buraya yazılmaz; README İsteğe bağlı ayarlar bölümüne bakın.",
+  "autoCompactWindow": 500000,
+  "hooks": {
+    "SessionStart": [
+      {
+        "matcher": "startup",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"$HOME/.claude/hooks/kurulum-esitle.mjs\"",
+            "timeout": 5
+          }
+        ]
+      },
+      {
+        "matcher": "startup|clear",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"$HOME/.claude/hooks/oturum-baslangici.mjs\"",
+            "timeout": 15
+          }
+        ]
+      },
+      {
+        "matcher": "compact",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"$HOME/.claude/hooks/sikistirma-sonrasi.mjs\"",
+            "timeout": 5
+          }
+        ]
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"$HOME/.claude/hooks/baglam-uyarisi.mjs\"",
+            "timeout": 5
+          }
+        ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"$HOME/.claude/hooks/sesli-oku.mjs\"",
+            "timeout": 5
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"$HOME/.claude/hooks/ajan-tavani.mjs\"",
+            "timeout": 5
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"$HOME/.claude/hooks/sesli-oku.mjs\"",
+            "timeout": 5
+          }
+        ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"$HOME/.claude/hooks/kurulum-esitle.mjs\"",
+            "timeout": 5
+          }
+        ]
+      }
+    ]
+  }
+}

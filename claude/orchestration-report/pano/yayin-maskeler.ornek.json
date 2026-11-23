@@ -1,0 +1,8 @@
+{
+  "aciklama": "Bu dosyayı yayin-maskeler.json adıyla kopyala ve kendi değerlerini yaz; gerçek dosya yalnız sende kalır, paylaşma. 'maskeler': pano.mjs --artifact çıktısında birebir değiştirilecek dizeler (yerel panoya dokunmaz); raporlar/kontrol.mjs de bunların sitede geçmediğine bakar. 'projeler' (isteğe bağlı): paylaşım kopyalarında proje listesi dışında hiç geçmemesi gereken proje adları (pano.mjs --paylasim ve pano/paylasim-kontrol.mjs kullanır).",
+  "maskeler": [
+    { "bul": "hesap-kimligi-ornegi", "yerine": "[hesap]" },
+    { "bul": "Ad Soyad", "yerine": "[kişi]" }
+  ],
+  "projeler": ["gizli-proje-ornegi"]
+}

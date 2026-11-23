@@ -1,0 +1,7 @@
+# Eşitleme açıksa farklı işletim sistemleri aynı repoyu rebase eder: satır sonları her yerde LF
+* text=auto eol=lf
+*.png binary
+*.jpg binary
+*.ico binary
+# İsteğe bağlı klasör hafızası: dizinler iki makinede satır eklenerek büyür; birleştirmede iki tarafın satırları da kalsın
+hafiza/*/MEMORY.md merge=union
