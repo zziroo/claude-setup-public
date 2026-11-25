@@ -2,7 +2,7 @@
 
 Claude Code için hazır bir çalışma düzeni: her oturuma yüklenen çalışma kuralları, kancalar, ajan tanımları, skill'ler, token/maliyet panosu ve boş bir "ikinci beyin" (Obsidian vault) şablonu. Tek komutla `~/.claude` altına bağlanır; repo nerede durursa dursun parçalar oradan güncellenir.
 
-Kimin için: Claude Code'u (özellikle masaüstü uygulamasını) her gün kullanan, büyük işleri alt ajanlara bölen ve kararlarını kalıcı notlarda tutmak isteyen biri. Kurallar ve skill metinleri Türkçe konuşan bir kullanıcı için yazıldı (Claude Türkçe cevap verir).
+Kimin için: Claude Code'u (özellikle masaüstü uygulamasını) her gün kullanan, büyük işleri alt ajanlara bölen ve kararlarını kalıcı notlarda tutmak isteyen biri. Kurallar ve skill metinleri Türkçe konuşan bir kullanıcı için yazıldı (Claude Türkçe cevap verir). Varsayılan ayarlar geniş kullanım limiti olan bir plana göre; Pro gibi küçük bir plandaysan aşağıdaki "Küçük plan için hafif ayar" bölümüne bak.
 
 ## İçinde ne var
 
@@ -31,7 +31,7 @@ Claude'un izleyeceği adımlar (komutlar bash içindir; Claude Code'un Bash arac
 4. **Kuru çalıştırma ve onay:** `node ~/ZZ/claude-kurulum/kur.mjs --kuru --vault`. Çıktıyı kullanıcıya göster: hangi girdiler kenara alınacak, hangi ayar anahtarları yazılacak, vault kopyalanacak mı. Ardından aşağıdaki "Kuralların Claude'a verdiği kalıcı izinler" bölümünü kullanıcıya özetle. İkisine birlikte onay al.
 5. **Kur:** `node ~/ZZ/claude-kurulum/kur.mjs --vault`. "Kanca doğrulandı" satırları kancaların stdin okuduğunu kanıtlar. Çıkış kodu 2 "uyarı var" demektir: her "Uyarı:" satırını kullanıcıya göster, dur ve raporla. Windows'ta yeniden adlandırmada `EPERM` çıkarsa masaüstü uygulamasını kapatıp düz bir terminalden çalıştırmayı öner.
 6. **Vault:** `--vault` bayrağı `~/ZZ/brain` yoksa `vault-sablonu/`'nu oraya kopyaladı; varsa dokunmadı. Kullanıcıya vault'u git deposu yapmayı öner (`git -C ~/ZZ/brain init`); birden çok makinede kullanacaksa uzak deposu **özel** olmalı. Vault kişisel notlarını taşır: bu repoya ya da herkese açık bir depoya asla ekleme.
-7. **İsteğe bağlı ayarları sor:** aşağıdaki "İsteğe bağlı ayarlar" listesini kullanıcıya tek tek sor; "evet" denenleri `~/.claude/settings.json`'a yaz (önce yedeğini al). Kendiliğinden hiçbirini açma.
+7. **İsteğe bağlı ayarları sor:** aşağıdaki "İsteğe bağlı ayarlar" listesini kullanıcıya tek tek sor; "evet" denenleri `~/.claude/settings.json`'a yaz (önce yedeğini al). Kendiliğinden hiçbirini açma. Sonra kullanıcıya hangi planda olduğunu sor; Pro gibi küçük bir plandaysa "Küçük plan için hafif ayar" bölümündeki değişiklikleri göster, onay verirse uygula ve o bölümdeki gibi commit'le.
 8. **Yeni oturumda doğrula:** kullanıcıdan yeni bir oturum açmasını iste. Orada: `CLAUDE.md` yüklendi mi (Claude Türkçe cevap veriyor, kuralları biliyor), oturumun skill listesinde `kod-haritasi` ve `pano` var mı (`kaydet`, `bitir`, `devir`, `teslim` yalnız elle çağrılır, listede görünmez; onlar için `~/.claude/skills/kaydet/SKILL.md` dosyasının varlığına bak), `~/.claude/settings.json`'da `hooks` bölümü var mı. Windows'ta `~/.claude/CLAUDE.md` tek satırlık bir yönlendirme dosyasıysa `@` içe aktarmasının çalıştığını kontrol et; çalışmıyorsa Geliştirici Modu'nu açıp `kur.mjs`'i yeniden çalıştırmak gerçek bağa geçirir.
 
 ## Elle kurulum
@@ -76,6 +76,19 @@ Bunlar kişisel tercihtir; kurucu yazmaz. Kuran Claude kullanıcıya sorar, "eve
 - `"autoUpdatesChannel": "latest"`: Claude Code güncellemelerini en yeni kanaldan alır.
 - `"agentPushNotifEnabled": true`: arka plan ajanı bitince bildirim gönderir.
 - `"skipWorkflowUsageWarning": true`: workflow başlatırken çıkan kullanım uyarısını atlar.
+
+## Küçük plan için hafif ayar (Pro)
+
+Kurallar haftalık limiti geniş bir plana göre ayarlı: alt ajanlar varsayılan olarak Opus, ajanların her kod değişikliği commit'ten önce Opus bir inceleme ajanından, ciddi bulgu çıkarsa bir de şüpheci ajandan geçer, oturum 400k bağlama kadar sürer. Pro planda bu düzen limiti kısa sürede bitirir. Kuralların iskeleti (koordinatör, kod haritası, vault, kapanış ve devir) küçük planda da işe yarar; pahalı olan ajan sayısı, model ve bağlam boyu. Kurduktan sonra şunları değiştir:
+
+1. **Alt ajan modeli:** `claude/CLAUDE.md` "Models" maddesinde varsayılanı `model: "sonnet"`, `effort: "medium"` yap; `opus`'u yalnız kullanıcı istediğinde ya da tasarım ağırlıklı işte kullan.
+2. **İnceleme ajanı:** `claude/agents/inceleme.md` başındaki `model: opus` satırını `model: sonnet` yap.
+3. **İnceleme kapısı:** `claude/CLAUDE.md` "Review gate" bölümünde inceleme ajanını yalnız riskli değişikliklere (giriş, ödeme, sunucu/API kodu, izinler, sırlar, veri taşıma) ve büyük bir dalı birleştirmeden öncesine bırak; küçük değişiklikleri koordinatör `git diff` ile kendisi gözden geçirsin. Şüpheci (`supheci`) adımını çıkar: bulguları koordinatör koda karşı kendisi doğrular.
+4. **Daha az ajan:** her alt ajan ~45–50k bağlamla soğuk başlar. "Inline vs agent" maddesine şunu ekle: işi yalnız çok okuma gerektiriyorsa ya da başka bir işle paralel yürüyecekse ajana ver, aynı anda en çok iki ajan. Workflow betikleri kullanılmaz.
+5. **Daha kısa oturum:** her çağrı bütün bağlamı yeniden okur, uzun oturum limiti hızlı yer. `claude/hooks/baglam-uyarisi.mjs` başında `DEVIR` sabitini `150_000` yap; `claude/CLAUDE.md` "Coordinator" maddesindeki ve `claude/skills/devir/SKILL.md`'deki "400k"yı aynı değere çek. Alt ajan tavanı için `claude/hooks/ajan-tavani.mjs`'de `BAGLAM`'ı `120_000`, `CAGRI`'yı `60` yap; `CLAUDE.md` "Agent size" maddesindeki 200k ve ~100 çağrıyı da buna uydur.
+6. **Advisor kapalı:** "İsteğe bağlı ayarlar"daki `advisorModel`'i ekleme; araç açıksa `/advisor off`.
+
+Bu sayılar ölçülmüş değil, başlangıç değeri: limit yine çabuk doluyorsa önce 1, 3 ve 4'e bak. Değişiklikleri kendi klonunda commit'le ki repo güncellemesini çekerken kaybolmasın: `git -C ~/ZZ/claude-kurulum commit -am "Küçük plan ayarı"` (git kimliği yoksa önce `user.name` ve `user.email` yaz), güncellerken `git -C ~/ZZ/claude-kurulum pull --rebase`. Planı büyütünce bu commit'i `git revert` ile geri al.
 
 ## Kendi makinelerin arasında eşitleme (isteğe bağlı)
 
