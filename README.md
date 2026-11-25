@@ -21,12 +21,12 @@ Kimin için: Claude Code'u (özellikle masaüstü uygulamasını) her gün kulla
 
 Claude Code'da (tercihen ev klasöründe açılmış bir oturumda) şunu yapıştır:
 
-> Bu Claude Code düzenini kur: `https://github.com/zziroo/claude-duzeni`. Repodaki README'nin "Claude'a kurdur" bölümündeki adımları sırayla uygula. Bir şeyi değiştirmeden önce bana ne yapacağını göster, isteğe bağlı ayarları tek tek sor, sonunda ne değiştiğini ve yedeklerin nerede olduğunu raporla.
+> Bu Claude Code düzenini kur: `https://github.com/zziroo/claude-setup-public`. Repodaki README'nin "Claude'a kurdur" bölümündeki adımları sırayla uygula. Bir şeyi değiştirmeden önce bana ne yapacağını göster, isteğe bağlı ayarları tek tek sor, sonunda ne değiştiğini ve yedeklerin nerede olduğunu raporla.
 
 Claude'un izleyeceği adımlar (komutlar bash içindir; Claude Code'un Bash aracı Windows'ta Git Bash kullanır ve `~` açılır. PowerShell'de `~` yerine `$HOME` yaz; cmd kullanma):
 
 1. **Ön koşullar:** `git --version` ve `node --version` (Node 20 ya da üstü gerekir). Windows'ta Git for Windows kurulu olmalı (Claude Code kancaları Git Bash ile çalıştırır). Eksik varsa kullanıcıya söyle ve kurmayı öner (Windows `winget install Git.Git OpenJS.NodeJS.LTS`, macOS `brew install git node`); onay verirse kur. Yeni kurulan komutlar açık oturumun PATH'inde görünmez: kullanıcıdan Claude Code'u kapatıp yeniden açmasını ve aynı isteği yeniden yapıştırmasını iste. Onay vermezse dur.
-2. **Klonla:** `mkdir -p ~/ZZ`, sonra `git clone https://github.com/zziroo/claude-duzeni ~/ZZ/claude-kurulum`. Klasör zaten varsa üzerine yazma; kullanıcıya sor.
+2. **Klonla:** `mkdir -p ~/ZZ`, sonra `git clone https://github.com/zziroo/claude-setup-public ~/ZZ/claude-kurulum`. Klasör zaten varsa üzerine yazma; kullanıcıya sor.
 3. **Mevcut durumu not al:** `~/.claude/settings.json` (özellikle `hooks`), `~/.claude/CLAUDE.md`, `~/.claude/hooks`, `~/.claude/agents`, `~/.claude/skills` var mı. Değiştirme, yalnız listele. Bunlardan biri varsa kullanıcıya açıkça söyle: kurucu onları silmez ama `.yedek-*` adıyla kenara alır, yani kendi kuralları, kancaları, ajanları ve skill'leri repoya taşınana kadar çalışmayı bırakır (aşağıda "Kurucu `~/.claude`'da neyi değiştirir").
 4. **Kuru çalıştırma ve onay:** `node ~/ZZ/claude-kurulum/kur.mjs --kuru --vault`. Çıktıyı kullanıcıya göster: hangi girdiler kenara alınacak, hangi ayar anahtarları yazılacak, vault kopyalanacak mı. Ardından aşağıdaki "Kuralların Claude'a verdiği kalıcı izinler" bölümünü kullanıcıya özetle. İkisine birlikte onay al.
 5. **Kur:** `node ~/ZZ/claude-kurulum/kur.mjs --vault`. "Kanca doğrulandı" satırları kancaların stdin okuduğunu kanıtlar. Çıkış kodu 2 "uyarı var" demektir: her "Uyarı:" satırını kullanıcıya göster, dur ve raporla. Windows'ta yeniden adlandırmada `EPERM` çıkarsa masaüstü uygulamasını kapatıp düz bir terminalden çalıştırmayı öner.
@@ -37,7 +37,7 @@ Claude'un izleyeceği adımlar (komutlar bash içindir; Claude Code'un Bash arac
 ## Elle kurulum
 
 ```bash
-git clone https://github.com/zziroo/claude-duzeni ~/ZZ/claude-kurulum
+git clone https://github.com/zziroo/claude-setup-public ~/ZZ/claude-kurulum
 cd ~/ZZ/claude-kurulum
 node kur.mjs --kuru --vault   # önce ne yapacağını gör
 node kur.mjs --vault          # bağla, ayarları uygula, kancaları dene, vault yoksa şablonu kopyala
